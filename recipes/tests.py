@@ -7,7 +7,8 @@ class RecipeModelTest(TestCase):
         Recipe.objects.create(
             name='Soup',
             ingredients='water, carrot, potato, salt',
-            cooking_time=15
+            cooking_time=15,
+            image="recipes/sample.jpg"
         )
 
     def test_name_label(self):
@@ -49,3 +50,7 @@ class RecipeModelTest(TestCase):
           recipe = Recipe.objects.get(id=1)
           recipe.calculate_difficulty()
           self.assertEqual(recipe.difficulty, "Intermediate")
+
+    def test_get_absolute_url(self):
+          recipe = Recipe.objects.get(id=1)
+          self.assertEqual(recipe.get_absolute_url(), '/list/1')

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Recipes List</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                background-color: #f4f4f9;
+                color: #333;
+            }
+
+            h1 {
+                text-align: center;
+                margin: 20px 0;
+                color: #444;
+            }
+
+            .recipe-list {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 20px;
+                margin: 20px;
+            }
+
+            .recipe-item {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 80%;
+                padding: 15px;
+                background-color: #fff;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                border-radius: 8px;
+                height: 120px;
+                overflow: hidden;
+            }
+
+            .recipe-item img {
+                width: 100px;
+                height: 100px;
+                border-radius: 4px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+
+            .recipe-name {
+                flex-grow: 1;
+                margin-left: 20px;
+                font-size: 1.2rem;
+                color: #333;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Recipes List</h1>
+            <div class="recipe-list">
+                {% for object in object_list %}
+                <div class="recipe-item">
+                    <img src="{{ object.image.url }}" alt="{{ object.name }}">
+                    <div class="recipe-name"><a href ="{{object.get_absolute_url}}"> {{object.name}} </a></div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Recipe Details</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                background-color: #f4f4f9;
+                color: #333;
+            }
+
+            .container {
+                max-width: 800px;
+                margin: 20px auto;
+                padding: 20px;
+                background-color: #fff;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            }
+
+            h2 {
+                text-align: center;
+                color: #444;
+                margin-bottom: 20px;
+            }
+
+            .details {
+                line-height: 1.8;
+                font-size: 1rem;
+            }
+
+            .details b {
+                color: #555;
+            }
+
+            .image-container {
+                text-align: center;
+                margin: 20px 0;
+            }
+
+            .image-container img {
+                max-width: 100%;
+                height: auto;
+                border-radius: 8px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h2>{{ object.name }}</h2>
+            <div class="details">
+                <b>Name: </b> {{ object.name }} <br>
+                <b>Ingredients: </b> {{ object.ingredients }} <br>
+                <b>Cooking Time: </b> {{ object.cooking_time }} minutes <br>
+                <b>Difficulty: </b> {{ object.difficulty }} <br>
+            </div>
+            <div class="image-container">
+                <img src="{{ object.image.url }}" alt="{{ object.name }}">
+            </div>
+        </div>
+    </body>
+</html>
