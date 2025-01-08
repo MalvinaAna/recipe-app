@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Logout Successful</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                background-color: #f4f4f9;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                color: #333;
+            }
+
+            .container {
+                text-align: center;
+                max-width: 600px;
+                padding: 20px;
+                background-color: #fff;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                border-radius: 10px;
+            }
+
+            h1 {
+                font-size: 2rem;
+                color: #444;
+                margin-bottom: 10px;
+            }
+
+            p {
+                font-size: 1rem;
+                line-height: 1.6;
+                margin-bottom: 20px;
+            }
+
+            a {
+                display: inline-block;
+                text-decoration: none;
+                color: #fff;
+                background-color: #007BFF;
+                padding: 10px 20px;
+                border-radius: 5px;
+                font-size: 1rem;
+                transition: background-color 0.3s ease;
+            }
+
+            a:hover {
+                background-color: #0056b3;
+            }
+
+            .additional-info {
+                margin-top: 20px;
+                font-size: 0.9rem;
+                color: #555;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>You’ve Successfully Logged Out</h1>
+            <p>Thank you for using the Recipe App. We hope to see you again soon!</p>
+            <a href="{% url 'login' %}">Log Back In</a>
+            <div class="additional-info">
+                <p>Looking for new recipes? Check out our latest collections when you log back in.</p>
+            </div>
+        </div>
+    </body>
+</html>

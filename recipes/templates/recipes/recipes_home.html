@@ -36,6 +36,24 @@
                 text-align: center;
             }
 
+            .login-button {
+                margin-top: 20px;
+                padding: 10px 20px;
+                font-size: 1rem;
+                color: white;
+                background-color: #007BFF;
+                border: none;
+                border-radius: 5px;
+                text-decoration: none;
+                cursor: pointer;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+                transition: background-color 0.3s ease;
+            }
+
+            .login-button:hover {
+                background-color: #0056b3;
+            }
+
             footer {
                 position: absolute;
                 bottom: 10px;
@@ -59,6 +77,7 @@
     <body>
         <div class="banner"></div>
         <h1>Welcome to the Recipe App</h1>
+        <a href="{% url 'login' %}" class="login-button">Login</a>
         <footer>
             Photo by <a href="https://unsplash.com/@callumshaw?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Callum Shaw</a> on <a href="https://unsplash.com/photos/white-tray-and-two-brown-bowls-Vrztewqmi4Q?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Unsplash</a>
         </footer>

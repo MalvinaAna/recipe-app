@@ -51,16 +51,38 @@
                 font-size: 1.2rem;
                 color: #333;
             }
+
+            .logout-button {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                padding: 10px 20px;
+                font-size: 1rem;
+                color: white;
+                background-color: #007BFF;
+                border: none;
+                border-radius: 5px;
+                text-decoration: none;
+                text-align: center;
+                cursor: pointer;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+                transition: background-color 0.3s ease;
+            }
+
+            .logout-button:hover {
+                background-color: #0056b3;
+            }
         </style>
     </head>
     <body>
+        <a href="{% url 'logout' %}" class="logout-button">Logout</a>
         <div class="container">
             <h1>Recipes List</h1>
             <div class="recipe-list">
                 {% for object in object_list %}
                 <div class="recipe-item">
                     <img src="{{ object.image.url }}" alt="{{ object.name }}">
-                    <div class="recipe-name"><a href ="{{object.get_absolute_url}}"> {{object.name}} </a></div>
+                    <div class="recipe-name"><a href="{{ object.get_absolute_url }}">{{ object.name }}</a></div>
                 </div>
                 {% endfor %}
             </div>
