@@ -17,45 +17,16 @@
                 color: #444;
             }
 
-            .recipe-list {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                gap: 20px;
-                margin: 20px;
-            }
-
-            .recipe-item {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                width: 80%;
-                padding: 15px;
-                background-color: #fff;
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-                border-radius: 8px;
-                height: 120px;
-                overflow: hidden;
-            }
-
-            .recipe-item img {
-                width: 100px;
-                height: 100px;
-                border-radius: 4px;
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            }
-
-            .recipe-name {
-                flex-grow: 1;
-                margin-left: 20px;
-                font-size: 1.2rem;
-                color: #333;
+            .container {
+                max-width: 1200px;
+                margin: auto;
+                padding: 20px;
             }
 
             .logout-button {
                 position: absolute;
-                top: 10px;
-                right: 10px;
+                top: 20px;
+                right: 20px;
                 padding: 10px 20px;
                 font-size: 1rem;
                 color: white;
@@ -63,14 +34,132 @@
                 border: none;
                 border-radius: 5px;
                 text-decoration: none;
-                text-align: center;
                 cursor: pointer;
                 box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-                transition: background-color 0.3s ease;
             }
 
             .logout-button:hover {
                 background-color: #0056b3;
+            }
+
+            .search-container {
+                background-color: #fff;
+                padding: 15px;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                margin-bottom: 20px;
+            }
+
+            .search-container form {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                justify-content: space-between;
+            }
+
+            .search-container input[type="text"],
+            .search-container select {
+                flex: 1;
+                min-width: 200px;
+                padding: 10px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+            }
+
+            .search-container button {
+                padding: 10px 20px;
+                background-color: #007BFF;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+
+            .search-container button:hover {
+                background-color: #0056b3;
+            }
+
+            .recipe-list {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 20px;
+                justify-content: center;
+            }
+
+            .recipe-item {
+                width: 30%;
+                background-color: #fff;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                overflow: hidden;
+                text-align: center;
+                padding: 15px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .recipe-item img {
+                max-width: 100%;
+                height: 150px;
+                object-fit: cover;
+                border-radius: 4px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+
+            .recipe-name {
+                font-size: 1.2rem;
+                margin-top: 10px;
+                color: #333;
+            }
+
+            .table-container {
+                margin-top: 20px;
+                background-color: #fff;
+                padding: 15px;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            }
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+
+            th, td {
+                padding: 10px;
+                text-align: left;
+                border-bottom: 1px solid #ddd;
+            }
+
+            th {
+                background-color: #f4f4f9;
+                color: #444;
+            }
+
+            tr:hover {
+                background-color: #f9f9f9;
+            }
+
+            td a {
+                color: #007BFF;
+                text-decoration: none;
+            }
+
+            td a:hover {
+                text-decoration: underline;
+            }
+
+            .chart-container {
+                margin-top: 20px;
+                text-align: center;
+            }
+
+            .chart-container img {
+                max-width: 100%;
+                height: auto;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             }
         </style>
     </head>
@@ -78,14 +167,62 @@
         <a href="{% url 'logout' %}" class="logout-button">Logout</a>
         <div class="container">
             <h1>Recipes List</h1>
+
+            <!-- Search Form -->
+            <div class="search-container">
+                <form method="GET">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit">Search</button>
+                </form>
+            </div>
+
+            <!-- Default Recipe Cards -->
             <div class="recipe-list">
-                {% for object in object_list %}
+                {% for recipe in recipes %}
                 <div class="recipe-item">
-                    <img src="{{ object.image.url }}" alt="{{ object.name }}">
-                    <div class="recipe-name"><a href="{{ object.get_absolute_url }}">{{ object.name }}</a></div>
+                    <img src="{{ recipe.image.url }}" alt="{{ recipe.name }}">
+                    <div class="recipe-name">
+                        <a href="{{ recipe.get_absolute_url }}">{{ recipe.name }}</a>
+                    </div>
                 </div>
                 {% endfor %}
             </div>
+
+            <!-- Search Results -->
+            {% if recipes_df %}
+            <div class="table-container">
+                <h2>Search Results</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Recipe Name</th>
+                            <th>Ingredients</th>
+                            <th>Difficulty</th>
+                            <th>Cooking Time</th>
+                            <th>Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for recipe in recipes %}
+                        <tr>
+                            <td>{{ recipe.name }}</td>
+                            <td>{{ recipe.ingredients }}</td>
+                            <td>{{ recipe.difficulty }}</td>
+                            <td>{{ recipe.cooking_time }}</td>
+                            <td><a href="{{ recipe.get_absolute_url }}">View Details</a></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Chart -->
+            <div class="chart-container">
+                <h2>Chart</h2>
+                <img src="data:image/png;base64,{{ chart }}" alt="Chart">
+            </div>
+            {% endif %}
         </div>
     </body>
 </html>
