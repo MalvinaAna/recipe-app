@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 from django.urls import reverse
 from .models import Recipe
-from .forms import RecipesSearchForm
+from .forms import RecipesSearchForm, RecipeForm
 
 
 class RecipeModelTest(TestCase):
@@ -60,6 +60,34 @@ class RecipeFormTest(TestCase):
         form = RecipesSearchForm(data=form_data)
         self.assertTrue(form.is_valid())
 
+    def test_valid_recipe_form(self):
+        form_data = {
+            'name': 'Soup',
+            'ingredients': 'water, carrot',
+            'cooking_time': 10,
+        }
+        form = RecipeForm(data=form_data)
+        self.assertTrue(form.is_valid())
+
+    def test_invalid_recipe_form_missing_fields(self):
+        form_data = {
+            'name': '',
+            'ingredients': 'water, carrot',
+            'cooking_time': 10,
+        }
+        form = RecipeForm(data=form_data)
+        self.assertFalse(form.is_valid())
+
+    def test_invalid_recipe_form_long_name(self):
+        form_data = {
+            'name': 'A' * 51,  # Exceeding max length
+            'ingredients': 'water, carrot',
+            'cooking_time': 10,
+        }
+        form = RecipeForm(data=form_data)
+        self.assertFalse(form.is_valid())
+
+
 class RecipeViewsTest(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -103,3 +131,26 @@ class RecipeViewsTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Soup")
         self.assertNotContains(response, "Salad")
+
+    def test_about_me_view(self):
+        response = self.client.get(reverse('recipes:about'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "About Me")
+        self.assertContains(response, "Maria Vasiliki Anastasopoulou")
+        self.assertTemplateUsed(response, 'recipes/about_me.html')
+
+    def test_add_recipe_view_get(self):
+        response = self.client.get(reverse('recipes:add'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Add a New Recipe")
+        self.assertTemplateUsed(response, 'recipes/add_recipe.html')
+
+    def test_add_recipe_view_post(self):
+        response = self.client.post(reverse('recipes:add'), {
+            'name': 'New Recipe',
+            'ingredients': 'ingredient1, ingredient2',
+            'cooking_time': 20,
+            'image': '',
+        })
+        self.assertEqual(response.status_code, 302)  # Should redirect after successful submission
+        self.assertTrue(Recipe.objects.filter(name="New Recipe").exists())

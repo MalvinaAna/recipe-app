@@ -1,77 +1,23 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
     <head>
         <title>Recipe Details</title>
-        <style>
-            body {
-                font-family: Arial, sans-serif;
-                margin: 0;
-                padding: 0;
-                background-color: #f4f4f9;
-                color: #333;
-            }
-
-            .container {
-                max-width: 800px;
-                margin: 20px auto;
-                padding: 20px;
-                background-color: #fff;
-                border-radius: 8px;
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            }
-
-            h2 {
-                text-align: center;
-                color: #444;
-                margin-bottom: 20px;
-            }
-
-            .details {
-                line-height: 1.8;
-                font-size: 1rem;
-            }
-
-            .details b {
-                color: #555;
-            }
-
-            .image-container {
-                text-align: center;
-                margin: 20px 0;
-            }
-
-            .image-container img {
-                max-width: 100%;
-                height: auto;
-                border-radius: 8px;
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            }
-
-            .logout-button {
-                position: absolute;
-                top: 10px;
-                right: 10px;
-                padding: 10px 20px;
-                font-size: 1rem;
-                color: white;
-                background-color: #007BFF;
-                border: none;
-                border-radius: 5px;
-                text-decoration: none;
-                text-align: center;
-                cursor: pointer;
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-                transition: background-color 0.3s ease;
-            }
-
-            .logout-button:hover {
-                background-color: #0056b3;
-            }
-        </style>
+        <link rel="stylesheet" href="{% static 'styles.css' %}">
     </head>
     <body>
-        <a href="{% url 'logout' %}" class="logout-button">Logout</a>
-        <div class="container">
+        <!-- Navigation Bar -->
+        <nav class="navbar">
+            <ul>
+                <li><a href="{% url 'recipes:list' %}">Home</a></li>
+                <li><a href="{% url 'recipes:add' %}">Add Recipe</a></li>
+                <li><a href="{% url 'recipes:about' %}">About Me</a></li>
+                <li><a href="{% url 'logout' %}" class="logout-button">Logout</a></li>
+            </ul>
+        </nav>
+
+        <!-- Recipe Details -->
+        <div class="recipe-details-container">
             <h2>{{ object.name }}</h2>
             <div class="details">
                 <b>Name: </b> {{ object.name }} <br>

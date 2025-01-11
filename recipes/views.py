@@ -1,70 +1,69 @@
-from django.shortcuts import render
-from django.views.generic import ListView, DetailView
-from django.db.models import Q
+from django.shortcuts import render, redirect
+from django.views.generic import ListView, DetailView, CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse_lazy
 from .models import Recipe
-from .forms import RecipesSearchForm
+from .forms import RecipesSearchForm, RecipeForm
 import pandas as pd
 from .utils import get_chart
 
+
 # Home view
 def home(request):
-    """
-    Render the home page for the recipes app.
-    """
     return render(request, 'recipes/recipes_home.html')
 
 
-# Recipe list view with search and visualization
+# About Me view
+def about_me(request):
+    return render(request, 'recipes/about_me.html')
+
+
+# Recipe List View
 class RecipeListView(LoginRequiredMixin, ListView):
     model = Recipe
     template_name = 'recipes/recipes_list.html'
     context_object_name = 'recipes'
 
     def get_queryset(self):
-        """
-        Filter recipes based on search criteria provided via GET parameters.
-        """
-        queryset = Recipe.objects.all()  # Default to show all recipes
-        recipe_name = self.request.GET.get('recipe_name', '')  # Get recipe name from query params
-        ingredients = self.request.GET.get('ingredients', '')  # Get ingredients from query params
+        queryset = Recipe.objects.all()
+        recipe_name = self.request.GET.get('recipe_name', '')
+        ingredients = self.request.GET.get('ingredients', '')
 
         if recipe_name:
-            queryset = queryset.filter(name__icontains=recipe_name)  # Partial match for recipe name
+            queryset = queryset.filter(name__icontains=recipe_name)
         if ingredients:
-            ingredients_list = [ingredient.strip() for ingredient in ingredients.split(',')]  # Split ingredients
+            ingredients_list = [ingredient.strip() for ingredient in ingredients.split(',')]
             for ingredient in ingredients_list:
-                queryset = queryset.filter(ingredients__icontains=ingredient)  # Match each ingredient
+                queryset = queryset.filter(ingredients__icontains=ingredient)
 
         return queryset
 
     def get_context_data(self, **kwargs):
-        """
-        Add search form, chart, and DataFrame to context for the template.
-        """
         context = super().get_context_data(**kwargs)
-        queryset = self.get_queryset()  # Get filtered queryset
-        form = RecipesSearchForm(self.request.GET or None)  # Create search form with GET data
-
-        # Convert queryset to DataFrame and generate chart if results exist
-        recipes_df = None
+        queryset = self.get_queryset()
+        form = RecipesSearchForm(self.request.GET or None)
+        recipes_df = pd.DataFrame(list(queryset.values('name', 'ingredients', 'difficulty', 'cooking_time')))
         chart = None
-        if queryset.exists():
-            recipes_df = pd.DataFrame(list(queryset.values('name', 'ingredients', 'difficulty', 'cooking_time')))
-            if not recipes_df.empty:  # Check for non-empty DataFrame
-                chart_type = self.request.GET.get('chart_type', 'bar')  # Default chart type is 'bar'
-                chart = get_chart(chart_type, recipes_df, labels=recipes_df['name'].tolist())  # Generate chart
-
-        # Add data to context
+        if not recipes_df.empty:
+            chart_type = self.request.GET.get('chart_type', 'bar')
+            chart = get_chart(chart_type, recipes_df, labels=recipes_df['name'].tolist())
         context.update({
             'form': form,
+            'recipes_df': recipes_df.to_html(classes='table') if not recipes_df.empty else None,
             'chart': chart,
-            'recipes_df': recipes_df.to_html(classes='table table-striped', index=False) if recipes_df is not None else None,
         })
         return context
 
 
-# Recipe detail view
+# Recipe Detail View
 class RecipeDetailView(LoginRequiredMixin, DetailView):
     model = Recipe
     template_name = 'recipes/recipes_details.html'
+
+
+# Add Recipe View
+class RecipeCreateView(LoginRequiredMixin, CreateView):
+    model = Recipe
+    form_class = RecipeForm
+    template_name = 'recipes/add_recipe.html'
+    success_url = reverse_lazy('recipes:list')

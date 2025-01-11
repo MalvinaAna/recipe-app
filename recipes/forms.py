@@ -1,12 +1,12 @@
 from django import forms
-
-CHART_CHOICES = (
-    ('bar', 'Bar Chart'),
-    ('pie', 'Pie Chart'),
-    ('line', 'Line Chart'),
-)
+from .models import Recipe
 
 class RecipesSearchForm(forms.Form):
-    recipe_name = forms.CharField(required=False, label='Recipe Name')
-    ingredients = forms.CharField(required=False, label='Ingredients (comma-separated)')
-    chart_type = forms.ChoiceField(choices=CHART_CHOICES, required=False, label='Chart Type')
+    recipe_name = forms.CharField(max_length=100, required=False)
+    ingredients = forms.CharField(max_length=255, required=False)
+    chart_type = forms.ChoiceField(choices=[('bar', 'Bar'), ('pie', 'Pie'), ('line', 'Line')], required=False)
+
+class RecipeForm(forms.ModelForm):
+    class Meta:
+        model = Recipe
+        fields = ['name', 'ingredients', 'cooking_time', 'image']
