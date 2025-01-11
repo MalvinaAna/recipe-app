@@ -78,3 +78,6 @@ The Recipe App is a **Django-based web application** that enables users to explo
 
 7. Open the app in your browser at:
    http://127.0.0.1:8000
+
+## Live Demo
+Check out the live version of the app here: [Live App](https://mighty-stream-61331-e042ffea2755.herokuapp.com/)
