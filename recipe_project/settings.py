@@ -26,7 +26,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY','django-insecure-ml49cp(e)=yakpe
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['mighty-stream-61331-e042ffea2755.herokuapp.com']
+ALLOWED_HOSTS = ['mighty-stream-61331-e042ffea2755.herokuapp.com', '127.0.0.1']
 
 
 # Application definition
@@ -140,8 +140,9 @@ CLOUDINARY_STORAGE = {
     'API_KEY': config('CLOUDINARY_API_KEY'),
     'API_SECRET': config('CLOUDINARY_API_SECRET'),
 }
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
-# MEDIA_URL = '/media/'
+MEDIA_URL = '/media/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -152,3 +153,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 import dj_database_url
 # Configure the database from the DATABASE_URL
 DATABASES['default'] = dj_database_url.config(conn_max_age=500, ssl_require=True)
+
+if 'DATABASE_URL' not in os.environ:
+    DATABASES['default'] = {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
